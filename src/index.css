@@ -1,0 +1,207 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/unbounded';
+@import '@fontsource/unbounded/latin-600.css';
+@import '@fontsource/unbounded/latin-700.css';
+@import '@fontsource/unbounded/latin-800.css';
+@import '@fontsource-variable/inter-tight';
+@import '@fontsource-variable/jetbrains-mono';
+@import '@fontsource/instrument-serif/400.css';
+@import '@fontsource/instrument-serif/400-italic.css';
+
+@theme {
+  --color-ink: #050505;
+  --color-ink-2: #0e0e0d;
+  --color-ink-3: #181816;
+  --color-bone: #f1eee6;
+  --color-bone-dim: #a8a59c;
+  --color-acid: #c6ff1a;
+  --color-acid-deep: #8fc000;
+  --color-line: rgb(241 238 230 / 0.14);
+
+  /* Static cuts have their overlapping contours merged: clean outlines and no notched E. */
+  --font-display: 'Unbounded', sans-serif;
+  --font-display-var: 'Unbounded Variable', 'Unbounded', sans-serif;
+  --font-sans: 'Inter Tight Variable', 'Inter Tight', system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace;
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-expo-in-out: cubic-bezier(0.87, 0, 0.13, 1);
+
+  --breakpoint-xs: 26rem;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --gutter: clamp(1rem, 3vw, 2.5rem);
+    --header-h: 4.5rem;
+  }
+
+  html {
+    background: var(--color-ink);
+    color: var(--color-bone);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    scrollbar-color: var(--color-acid) var(--color-ink);
+    scrollbar-width: thin;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: clip;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.55;
+    background: var(--color-ink);
+    overflow-x: clip;
+    caret-color: var(--color-acid);
+  }
+
+  body.is-locked {
+    overflow: hidden;
+  }
+
+  ::selection {
+    background: var(--color-acid);
+    color: var(--color-ink);
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-3);
+    border: 2px solid var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-acid);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-acid);
+    outline-offset: 4px;
+  }
+
+  a {
+    text-underline-offset: 0.22em;
+    text-decoration-thickness: 1px;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  @media (pointer: fine) {
+    html.has-cursor,
+    html.has-cursor * {
+      cursor: none !important;
+    }
+  }
+}
+
+@layer components {
+  .display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.84;
+    text-transform: uppercase;
+  }
+
+  /* The fill matches the surface and paints over the inner half of a doubled
+     stroke, hiding the font's overlapping contours: only the silhouette remains. */
+  .outline-text {
+    color: var(--outline-fill, var(--color-ink));
+    -webkit-text-stroke: 3px var(--outline-stroke, var(--color-bone));
+    paint-order: stroke fill;
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .serif-i {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: -0.01em;
+  }
+
+  .grain {
+    position: fixed;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    pointer-events: none;
+    z-index: 90;
+    opacity: 0.07;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    animation: grain 0.9s steps(6) infinite;
+  }
+
+  .crop {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-color: var(--color-acid);
+    border-style: solid;
+    border-width: 0;
+  }
+  .crop.tl { border-top-width: 2px; border-left-width: 2px; }
+  .crop.tr { border-top-width: 2px; border-right-width: 2px; }
+  .crop.bl { border-bottom-width: 2px; border-left-width: 2px; }
+  .crop.br { border-bottom-width: 2px; border-right-width: 2px; }
+
+  .marquee-track {
+    animation: marquee 28s linear infinite;
+  }
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-6%, 4%); }
+  40% { transform: translate(5%, -7%); }
+  60% { transform: translate(-3%, 8%); }
+  80% { transform: translate(7%, 2%); }
+  100% { transform: translate(-2%, -4%); }
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain,
+  .marquee-track {
+    animation: none;
+  }
+}
+
+@keyframes roomIn {
+  from { opacity: 0; transform: translateY(60%); }
+  to { opacity: 1; transform: none; }
+}
